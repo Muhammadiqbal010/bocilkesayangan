@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hadiah Misterius 🎁</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      margin: 0;
+      text-align: center;
+    }
+    .box {
+      width: 150px;
+      height: 150px;
+      background-color: #fff;
+      border: 5px solid #ff69b4;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff1493;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .box:hover {
+      transform: scale(1.1);
+    }
+    #clicks {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+    #riddle, #quiz, #codeLayer, #videoContainer {
+      display: none;
+      margin-top: 20px;
+    }
+    #lockIcon {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    #lockIcon:hover {
+      transform: scale(1.1);
+    }
+    input[type="text"] {
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff1493;
+    }
+    #codeFeedback {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="mysteryBox">
+    <img src="path_to_your_image.jpg" alt="Muka Dia" id="faceImage" style="width: 100%; height: 100%; border-radius: 20px; object-fit: cover;">
+  </div>
+  <div id="clicks">Klik untuk membuka hadiah... (0/50)</div>
+
+  <div id="riddle">
+    <h3>Teka-teki: Apa yang selalu datang tetapi tidak pernah tiba?</h3>
+    <input type="text" id="riddleAnswer" placeholder="Jawabanmu..." />
+    <button id="submitRiddle">Kirim</button>
+    <p id="riddleFeedback" style="color: red;"></p>
+  </div>
+
+  <div id="quiz">
+    <h3 id="quizQuestion"></h3>
+    <input type="text" id="quizAnswer" placeholder="Jawabanmu..." />
+    <button id="submitQuiz">Kirim Jawaban</button>
+    <p id="quizFeedback" style="color: red;"></p>
+  </div>
+
+  <div id="codeLayer">
+    <h3>Klik gembok untuk mendapatkan kode!</h3>
+    <img id="lockIcon" src="lock_icon.png" alt="Gembok" />
+    <p id="codeFeedback"></p>
+    <input type="text" id="secretCode" placeholder="Masukkan kode rahasia..." />
+    <button id="unlockVideo">Buka Video</button>
+  </div>
+
+  <div id="videoContainer">
+    <h3>Video Spesial 🎥</h3>
+    <iframe id="video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    let clickCount = 0;
+    const box = document.getElementById("mysteryBox");
+    const clicks = document.getElementById("clicks");
+    const riddle = document.getElementById("riddle");
+    const riddleAnswer = document.getElementById("riddleAnswer");
+    const submitRiddle = document.getElementById("submitRiddle");
+    const riddleFeedback = document.getElementById("riddleFeedback");
+    const quiz = document.getElementById("quiz");
+    const quizQuestion = document.getElementById("quizQuestion");
+    const quizAnswer = document.getElementById("quizAnswer");
+    const submitQuiz = document.getElementById("submitQuiz");
+    const quizFeedback = document.getElementById("quizFeedback");
+    const codeLayer = document.getElementById("codeLayer");
+    const lockIcon = document.getElementById("lockIcon");
+    const codeFeedback = document.getElementById("codeFeedback");
+    const secretCode = document.getElementById("secretCode");
+    const unlockVideo = document.getElementById("unlockVideo");
+    const videoContainer = document.getElementById("videoContainer");
+    const video = document.getElementById("video");
+
+    const quizData = [
+      { question: "Apa warna langit saat cerah?", answer: "Biru" },
+      { question: "Berapa bulan dalam setahun?", answer: "12" },
+      { question: "Apa ibukota Indonesia?", answer: "Jakarta" }
+    ];
+
+    let currentQuizIndex = 0;
+
+    box.addEventListener("click", () => {
+      clickCount++;
+      clicks.textContent = `Klik untuk membuka hadiah... (${clickCount}/50)`;
+      if (clickCount >= 50) {
+        box.style.display = "none";
+        clicks.style.display = "none";
+        riddle.style.display = "block";
+      }
+    });
+
+    submitRiddle.addEventListener("click", () => {
+      const answer = riddleAnswer.value.trim().toLowerCase();
+      if (answer === "besok") {
+        riddle.style.display = "none";
+        loadQuiz();
+      } else {
+        riddleFeedback.textContent = "Jawaban salah, coba lagi.";
+      }
+    });
+
+    function loadQuiz() {
+      if (currentQuizIndex < quizData.length) {
+        quiz.style.display = "block";
+        quizFeedback.textContent = "";
+        quizQuestion.textContent = quizData[currentQuizIndex].question;
+        quizAnswer.value = "";
+      } else {
+        quiz.style.display = "none";
+        codeLayer.style.display = "block";
+      }
+    }
+
+    submitQuiz.addEventListener("click", () => {
+      const userAnswer = quizAnswer.value.trim().toLowerCase();
+      if (userAnswer === quizData[currentQuizIndex].answer.toLowerCase()) {
+        currentQuizIndex++;
+        loadQuiz();
+      } else {
+        quizFeedback.textContent = "Jawaban salah, coba lagi.";
+      }
+    });
+
+    let lockClickCount = 0;
+    lockIcon.addEventListener("click", () => {
+      lockClickCount++;
+      if (lockClickCount === 3) {
+        codeFeedback.textContent = "Kode rahasia: LOVE0624";
+      }
+    });
+
+    unlockVideo.addEventListener("click", () => {
+      if (secretCode.value.trim() === "LOVE0624") {
+        videoContainer.style.display = "block";
+        video.src = "https://drive.google.com/file/d/1DKL9ZC9gWNHiqoQ2ViaAqAv4kxef8Dg_/preview";
+      } else {
+        alert("Kode rahasia salah, coba lagi.");
+      }
+    });
+
+    const faceImage = document.getElementById("faceImage");
+    faceImage.addEventListener("click", () => {
+      faceImage.style.transform = "scale(1.2)";
+      setTimeout(() => {
+        faceImage.style.transform = "scale(1)";
+      }, 300);
+    });
+  </script>
+
+</body>
+</html>
