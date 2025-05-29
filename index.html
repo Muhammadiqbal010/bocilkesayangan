@@ -160,7 +160,7 @@
   <div id="specialMessage" class="animated-text">🎉 Ciee udah 20 tahun aja nihhh... Udah legal dong!!! 🥳</div>
 
   <div id="riddle" class="animated-text">
-    <h3>Teka-teki: Siapa cowok terganteng?</h3>
+    <h3>Siapa makhluk hidup terganteng? hehehe...</h3>
     <input type="text" id="riddleAnswer" placeholder="Jawabanmu..." aria-label="Jawaban teka-teki" />
     <button id="submitRiddle" aria-label="Kirim jawaban teka-teki">Kirim</button>
     <p id="riddleFeedback"></p>
@@ -217,7 +217,7 @@
 
     const quizData = [
       { question: "Darimana kita ketemu?", answer: ["leomatch", "bot telegram", "bot tele", "telegram"] },
-      { question: "Tanggal berapa kita pacaran?", answer: ["13", "13 maret"] },
+      { question: "Tanggal berapa kita berpacaran?", answer: ["13", "13 maret"] },
       { question: "Hal momen apa yang bikin kamu bahagia sama aku?", answer: ["bebas"] }, // Jawaban bebas
       { question: "Kenapa kamu bisa sayang sama aku?", answer: ["bebas"] }, // Jawaban bebas
       { question: "Hal apa yang kamu mau sampaikan sama aku?", answer: ["bebas"] } // Jawaban bebas
@@ -347,7 +347,7 @@
 };
 
     function sendToWhatsApp(message) {
-      const phoneNumber = "08577315870"; // Ganti dengan nomor telepon yang diinginkan
+      const phoneNumber = "628577315870"; // Ganti dengan nomor telepon yang diinginkan
       const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
     }
