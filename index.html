@@ -331,22 +331,20 @@
       lockClickCount++;
       if (lockClickCount === 3) {
         codeFeedback.style.color = "green";
-        codeFeedback.textContent = "Kode rahasianya: bocilnya aku 💖";
+        codeFeedback.textContent = "Kode rahasianya: kamu bocilnya aku ";
       }
     };
 
     unlockVideo.onclick = () => {
-      const code = secretCode.value.trim();
-      if (code === "bocilnya aku") {
-        videoContainer.style.display = "block";
-        codeLayer.style.display = "none";
-        // Ganti URL di bawah ini dengan link video yang kamu ingin tampilkan
-        video.src = "https://drive.google.com/uc?id=1052RuNycO1np-XyR3B91wltOYFQby5n5"; // Link video dari Google Drive
-      } else {
-        codeFeedback.style.color = "red";
-        codeFeedback.textContent = "Kode salah, coba lagi ya! 😅";
-      }
-    };
+  const code = secretCode.value.trim().toLowerCase();
+  if (code === "kamu bocilnya aku") {
+    codeLayer.style.display = "none";
+    video.src = "https://drive.google.com/file/d/1PsI2bgLxZJtAI4Jy-HAbBFieXzMENcr8/preview"; // Ganti dengan ID kamu
+    videoContainer.style.display = "block";
+  } else {
+    codeFeedback.textContent = "Kode salah, coba lagi ya!";
+  }
+};
 
     function sendToWhatsApp(message) {
       const phoneNumber = "08577315870"; // Ganti dengan nomor telepon yang diinginkan
