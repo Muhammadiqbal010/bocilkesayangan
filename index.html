@@ -12,198 +12,347 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
       margin: 0;
       text-align: center;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      overflow: hidden;
     }
-    .box {
-      width: 150px;
-      height: 150px;
-      background-color: #fff;
-      border: 5px solid #ff69b4;
-      border-radius: 20px;
+
+    .input-container {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      color: #ff1493;
-      cursor: pointer;
-      transition: transform 0.3s;
+      z-index: 1;
     }
-    .box:hover {
-      transform: scale(1.1);
-    }
-    #clicks {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #333;
-    }
-    #riddle, #quiz, #codeLayer, #videoContainer {
-      display: none;
-      margin-top: 20px;
-    }
-    #lockIcon {
-      width: 100px;
-      height: 100px;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-    #lockIcon:hover {
-      transform: scale(1.1);
-    }
+
     input[type="text"] {
-      padding: 5px;
+      padding: 10px;
       font-size: 16px;
+      border: 2px solid #ff69b4;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      width: 80%;
+      max-width: 300px;
     }
+
     button {
-      margin-top: 10px;
-      padding: 8px 16px;
+      padding: 10px 20px;
       font-size: 16px;
       background-color: #ff69b4;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
+
     button:hover {
       background-color: #ff1493;
     }
-    #codeFeedback {
+
+    #balloonContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .balloon {
+      width: 80px;
+      height: 120px;
+      background-color: pink;
+      border-radius: 50% 50% 0 0; /* Adjusted for a more balloon-like shape */
+      position: absolute;
+      bottom: -100px;
+      cursor: pointer;
+      transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .balloon:after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      width: 2px;
+      height: 50px;
+      background-color: #333;
+    }
+
+    #birthdayText {
+      font-size: 36px;
+      font-weight: bold;
+      color: #ff1493;
+      margin-top: 20px;
+      display: none;
+      z-index: 2;
+    }
+
+    #specialMessage {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff1493;
+      display: none;
+      margin-top: 20px;
+    }
+
+    #riddle, #quiz, #codeLayer, #videoContainer {
+      display: none;
+      margin-top: 20px;
+      z-index: 1;
+    }
+
+    #lockIcon {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    #lockIcon:hover {
+      transform: scale(1.1);
+    }
+
+    #codeFeedback, #riddleFeedback, #quizFeedback {
       color: red;
+    }
+
+    iframe {
+      border: none;
+    }
+
+    .animated-text {
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="box" id="mysteryBox">
-    <img src="path_to_your_image.jpg" alt="Muka Dia" id="faceImage" style="width: 100%; height: 100%; border-radius: 20px; object-fit: cover;">
-  </div>
-  <div id="clicks">Klik untuk membuka hadiah... (0/50)</div>
-
-  <div id="riddle">
-    <h3>Teka-teki: Apa yang selalu datang tetapi tidak pernah tiba?</h3>
-    <input type="text" id="riddleAnswer" placeholder="Jawabanmu..." />
-    <button id="submitRiddle">Kirim</button>
-    <p id="riddleFeedback" style="color: red;"></p>
+  <div class="input-container" id="nameInputContainer">
+    <input type="text" id="nameInput" placeholder="Masukkan nama..." aria-label="Nama" />
+    <button id="startButton" aria-label="Mulai permainan">Mulai</button>
   </div>
 
-  <div id="quiz">
+  <div id="birthdayText" class="animated-text">Happy Birthday Sayanggkuu <span id="userName"></span>! 🎉</div>
+  <div id="balloonContainer"></div>
+
+  <div id="specialMessage" class="animated-text">🎉 Ciee udah 20 tahun aja nihhh... Udah legal dong!!! 🥳</div>
+
+  <div id="riddle" class="animated-text">
+    <h3>Teka-teki: Siapa cowok terganteng?</h3>
+    <input type="text" id="riddleAnswer" placeholder="Jawabanmu..." aria-label="Jawaban teka-teki" />
+    <button id="submitRiddle" aria-label="Kirim jawaban teka-teki">Kirim</button>
+    <p id="riddleFeedback"></p>
+  </div>
+
+  <div id="quiz" class="animated-text">
     <h3 id="quizQuestion"></h3>
-    <input type="text" id="quizAnswer" placeholder="Jawabanmu..." />
-    <button id="submitQuiz">Kirim Jawaban</button>
-    <p id="quizFeedback" style="color: red;"></p>
+    <input type="text" id="quizAnswer" placeholder="Jawabanmu..." aria-label="Jawaban kuis" />
+    <button id="submitQuiz" aria-label="Kirim jawaban kuis">Kirim Jawaban</button>
+    <p id="quizFeedback"></p>
   </div>
 
-  <div id="codeLayer">
+  <div id="codeLayer" class="animated-text">
     <h3>Klik gembok untuk mendapatkan kode!</h3>
     <img id="lockIcon" src="lock_icon.png" alt="Gembok" />
     <p id="codeFeedback"></p>
-    <input type="text" id="secretCode" placeholder="Masukkan kode rahasia..." />
-    <button id="unlockVideo">Buka Video</button>
+    <input type="text" id="secretCode" placeholder="Masukkan kode rahasia..." aria-label="Kode rahasia" />
+    <button id="unlockVideo" aria-label="Buka video">Buka Video</button>
   </div>
 
-  <div id="videoContainer">
+  <div id="videoContainer" class="animated-text">
     <h3>Video Spesial 🎥</h3>
-    <iframe id="video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+    <iframe id="video" width="560" height="315" src="" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   </div>
 
   <script>
-    let clickCount = 0;
-    const box = document.getElementById("mysteryBox");
-    const clicks = document.getElementById("clicks");
+    const nameInput = document.getElementById("nameInput");
+    const startButton = document.getElementById("startButton");
+    const nameInputContainer = document.getElementById("nameInputContainer");
+    const birthdayText = document.getElementById("birthdayText");
+    const userName = document.getElementById("userName");
+    const balloonContainer = document.getElementById("balloonContainer");
+    const specialMessage = document.getElementById("specialMessage");
+
     const riddle = document.getElementById("riddle");
     const riddleAnswer = document.getElementById("riddleAnswer");
     const submitRiddle = document.getElementById("submitRiddle");
     const riddleFeedback = document.getElementById("riddleFeedback");
+
     const quiz = document.getElementById("quiz");
     const quizQuestion = document.getElementById("quizQuestion");
     const quizAnswer = document.getElementById("quizAnswer");
     const submitQuiz = document.getElementById("submitQuiz");
     const quizFeedback = document.getElementById("quizFeedback");
+
     const codeLayer = document.getElementById("codeLayer");
     const lockIcon = document.getElementById("lockIcon");
     const codeFeedback = document.getElementById("codeFeedback");
     const secretCode = document.getElementById("secretCode");
     const unlockVideo = document.getElementById("unlockVideo");
+
     const videoContainer = document.getElementById("videoContainer");
     const video = document.getElementById("video");
 
     const quizData = [
-      { question: "Apa warna langit saat cerah?", answer: "Biru" },
-      { question: "Berapa bulan dalam setahun?", answer: "12" },
-      { question: "Apa ibukota Indonesia?", answer: "Jakarta" }
+      { question: "Darimana kita ketemu?", answer: ["leomatch", "bot telegram", "bot tele", "telegram"] },
+      { question: "Tanggal berapa kita pacaran?", answer: ["13", "13 maret"] },
+      { question: "Hal momen apa yang bikin kamu bahagia sama aku?", answer: ["bebas"] }, // Jawaban bebas
+      { question: "Kenapa kamu bisa sayang sama aku?", answer: ["bebas"] }, // Jawaban bebas
+      { question: "Hal apa yang kamu mau sampaikan sama aku?", answer: ["bebas"] } // Jawaban bebas
     ];
 
-    let currentQuizIndex = 0;
+    let balloonCount = 0;
+    const totalBalloons = 20;
+    let lockClickCount = 0; // Counter for lock icon clicks
 
-    box.addEventListener("click", () => {
-      clickCount++;
-      clicks.textContent = `Klik untuk membuka hadiah... (${clickCount}/50)`;
-      if (clickCount >= 50) {
-        box.style.display = "none";
-        clicks.style.display = "none";
-        riddle.style.display = "block";
-      }
-    });
-
-    submitRiddle.addEventListener("click", () => {
-      const answer = riddleAnswer.value.trim().toLowerCase();
-      if (answer === "besok") {
-        riddle.style.display = "none";
-        loadQuiz();
+    startButton.onclick = () => {
+      const name = nameInput.value.trim();
+      if (name) {
+        userName.textContent = name;
+        nameInputContainer.style.display = "none";
+        birthdayText.style.display = "block";
+        balloonContainer.style.display = "block";
+        spawnBalloon();
       } else {
-        riddleFeedback.textContent = "Jawaban salah, coba lagi.";
+        alert("Silakan masukkan nama terlebih dahulu.");
       }
-    });
+    };
 
-    function loadQuiz() {
-      if (currentQuizIndex < quizData.length) {
-        quiz.style.display = "block";
-        quizFeedback.textContent = "";
-        quizQuestion.textContent = quizData[currentQuizIndex].question;
-        quizAnswer.value = "";
-      } else {
-        quiz.style.display = "none";
-        codeLayer.style.display = "block";
-      }
+    function spawnBalloon() {
+      const balloon = document.createElement("div");
+      balloon.classList.add("balloon");
+      balloon.textContent = balloonCount + 1;
+      const left = Math.random() * 80 + 10;
+      balloon.style.left = `${left}%`;
+      balloon.style.backgroundColor = getRandomColor();
+
+      balloon.onclick = () => {
+        balloon.remove();
+        balloonCount++;
+        if (balloonCount < totalBalloons) {
+          spawnBalloon();
+        } else {
+          balloonContainer.style.display = "none";
+          birthdayText.style.display = "none";
+          specialMessage.style.display = "block"; // Show special message after balloons
+          setTimeout(() => {
+            specialMessage.style.display = "none"; // Hide special message after a short delay
+            riddle.style.display = "block"; // Show the riddle
+          }, 5000); // Adjust the delay as needed (5000 ms = 5 seconds)
+        }
+      };
+
+      balloonContainer.appendChild(balloon);
+      animateBalloon(balloon);
     }
 
-    submitQuiz.addEventListener("click", () => {
-      const userAnswer = quizAnswer.value.trim().toLowerCase();
-      if (userAnswer === quizData[currentQuizIndex].answer.toLowerCase()) {
-        currentQuizIndex++;
-        loadQuiz();
-      } else {
-        quizFeedback.textContent = "Jawaban salah, coba lagi.";
-      }
-    });
+    function animateBalloon(balloon) {
+      let bottom = -100;
+      const interval = setInterval(() => {
+        if (bottom < window.innerHeight) {
+          bottom += 2;
+          balloon.style.bottom = bottom + "px";
+        } else {
+          clearInterval(interval);
+        }
+      }, 10);
+    }
 
-    let lockClickCount = 0;
-    lockIcon.addEventListener("click", () => {
+    function getRandomColor() {
+      const colors = ["#ff69b4", "#ff1493", "#ff6347", "#ffa500", "#ffcc00", "#00bfff"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    submitRiddle.onclick = () => {
+      const answer = riddleAnswer.value.trim().toLowerCase();
+      const validAnswers = ["iqbal", "muhammad iqbal", "pacar aku", "pacarku", "masku", "sayangku"];
+      if (validAnswers.includes(answer)) {
+        riddleFeedback.style.color = "green";
+        riddleFeedback.textContent = "Benar! 🥳";
+        setTimeout(() => {
+          riddle.style.display = "none";
+          quiz.style.display = "block";
+          quizQuestion.textContent = quizData[0].question;
+        }, 1000);
+      } else {
+        riddleFeedback.style.color = "red";
+        riddleFeedback.textContent = "Salah coba lagi 😅";
+      }
+    };
+
+    let currentQuiz = 0;
+    submitQuiz.onclick = () => {
+      const answer = quizAnswer.value.trim().toLowerCase();
+      const validAnswers = quizData[currentQuiz].answer.map(a => a.toLowerCase());
+      if (validAnswers.includes(answer) || quizData[currentQuiz].answer.includes("bebas")) {
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+          quizAnswer.value = "";
+          quizQuestion.textContent = quizData[currentQuiz].question;
+        } else {
+          quizFeedback.style.color = "green";
+          quizFeedback.textContent = "Semua benar! 🥳";
+          setTimeout(() => {
+            quiz.style.display = "none";
+            codeLayer.style.display = "block";
+            // Kirim jawaban ke WhatsApp
+            sendToWhatsApp("Semua jawaban benar!");
+          }, 1000);
+        }
+      } else {
+        quizFeedback.style.color = "red";
+        quizFeedback.textContent = "Jawaban salah, coba lagi ya!";
+      }
+    };
+
+    lockIcon.onclick = () => {
       lockClickCount++;
       if (lockClickCount === 3) {
-        codeFeedback.textContent = "Kode rahasia: LOVE0624";
+        codeFeedback.style.color = "green";
+        codeFeedback.textContent = "Kode rahasianya: bocilnya aku 💖";
       }
-    });
+    };
 
-    unlockVideo.addEventListener("click", () => {
-      if (secretCode.value.trim() === "LOVE0624") {
+    unlockVideo.onclick = () => {
+      const code = secretCode.value.trim();
+      if (code === "bocilnya aku") {
         videoContainer.style.display = "block";
-        video.src = "https://drive.google.com/file/d/1DKL9ZC9gWNHiqoQ2ViaAqAv4kxef8Dg_/preview";
+        codeLayer.style.display = "none";
+        // Ganti URL di bawah ini dengan link video yang kamu ingin tampilkan
+        video.src = "https://drive.google.com/uc?id=1052RuNycO1np-XyR3B91wltOYFQby5n5"; // Link video dari Google Drive
       } else {
-        alert("Kode rahasia salah, coba lagi.");
+        codeFeedback.style.color = "red";
+        codeFeedback.textContent = "Kode salah, coba lagi ya! 😅";
       }
-    });
+    };
 
-    const faceImage = document.getElementById("faceImage");
-    faceImage.addEventListener("click", () => {
-      faceImage.style.transform = "scale(1.2)";
-      setTimeout(() => {
-        faceImage.style.transform = "scale(1)";
-      }, 300);
-    });
+    function sendToWhatsApp(message) {
+      const phoneNumber = "08577315870"; // Ganti dengan nomor telepon yang diinginkan
+      const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
   </script>
-
 </body>
 </html>
