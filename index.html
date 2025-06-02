@@ -14,8 +14,9 @@
       height: 100vh;
       margin: 0;
       text-align: center;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      background: linear-gradient(135deg, #ffeef0 0%, #fff5f8 100%);
       overflow: hidden;
+      transition: background 1s ease;
     }
 
     .input-container {
@@ -23,31 +24,45 @@
       flex-direction: column;
       align-items: center;
       z-index: 1;
+      background-color: rgba(255, 192, 203, 0.85);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(255,105,180,0.4);
+      min-width: 320px;
+      max-width: 360px;
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="date"] {
       padding: 10px;
       font-size: 16px;
       border: 2px solid #ff69b4;
       border-radius: 8px;
-      margin-bottom: 10px;
-      width: 80%;
-      max-width: 300px;
+      margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(43%) sepia(79%) saturate(422%) hue-rotate(320deg) brightness(90%) contrast(85%);
+      cursor: pointer;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 10px 25px;
       font-size: 16px;
       background-color: #ff69b4;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(255,105,180,0.6);
+      font-weight: bold;
     }
 
     button:hover {
       background-color: #ff1493;
+      box-shadow: 0 6px 20px rgba(255,20,147,0.8);
     }
 
     #balloonContainer {
@@ -61,25 +76,28 @@
       align-items: center;
       justify-content: center;
       z-index: 2;
+      pointer-events: none;
     }
 
     .balloon {
       width: 80px;
       height: 120px;
-      background-color: pink;
-      border-radius: 50% 50% 0 0; /* Adjusted for a more balloon-like shape */
+      background-color: #ff69b4;
+      border-radius: 50% 50% 0 0;
       position: absolute;
-      bottom: -100px;
+      bottom: -120px;
       cursor: pointer;
-      transition: transform 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
       color: white;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 12px rgba(255,20,147,0.6);
+      pointer-events: auto;
+      user-select: none;
+      transition: transform 0.3s;
     }
 
     .balloon:after {
@@ -88,30 +106,34 @@
       bottom: -20px;
       width: 2px;
       height: 50px;
-      background-color: #333;
+      background-color: #c71585;
     }
 
     #birthdayText {
-      font-size: 36px;
-      font-weight: bold;
-      color: #ff1493;
+      font-size: 38px;
+      font-weight: 900;
+      color: #d81e5b;
       margin-top: 20px;
       display: none;
       z-index: 2;
+      text-shadow: 1px 1px 2px #ffcee3;
     }
 
     #specialMessage {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
-      color: #ff1493;
+      color: #d81e5b;
       display: none;
       margin-top: 20px;
+      text-shadow: 1px 1px 2px #ffcee3;
     }
 
-    #riddle, #quiz, #codeLayer, #videoContainer {
+    #riddle, #quiz, #codeLayer, #videoContainer, #clickPrompt, #finalMessage {
       display: none;
       margin-top: 20px;
       z-index: 1;
+      color: #880e4f;
+      user-select: none;
     }
 
     #lockIcon {
@@ -119,18 +141,25 @@
       height: 100px;
       cursor: pointer;
       transition: transform 0.3s;
+      filter: drop-shadow(0 0 5px #c71585);
     }
 
     #lockIcon:hover {
-      transform: scale(1.1);
+      transform: scale(1.15);
     }
 
     #codeFeedback, #riddleFeedback, #quizFeedback {
-      color: red;
+      color: #880e4f;
+      font-weight: 600;
+      margin-top: 8px;
     }
 
     iframe {
       border: none;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(216,30,91,0.6);
+      margin-bottom: 10px;
+      background: #fff0f6;
     }
 
     .animated-text {
@@ -138,56 +167,119 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    .video {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    #clickPrompt {
+      font-size: 21px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #ffd1dc;
+      border-radius: 12px;
+      padding: 15px 20px;
+      box-shadow: 0 6px 15px rgba(255,105,180,0.5);
+      user-select: none;
+      margin-top: 30px;
+    }
+
+    #finalMessage {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 36px;
+      font-weight: 900;
+      text-shadow: 2px 2px 8px #000;
+      z-index: 9999;
+      flex-direction: column;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      image-rendering: -webkit-optimize-contrast; /* Untuk Chrome/Safari */
+      backface-visibility: hidden;
+      transform: translateZ(0); /* Aktifkan hardware acceleration */
+    }
+
+    #finalMessage.show {
+      opacity: 1;
+      pointer-events: auto;
     }
   </style>
 </head>
 <body>
 
   <div class="input-container" id="nameInputContainer">
-    <input type="text" id="nameInput" placeholder="Masukkan nama..." aria-label="Nama" />
+    <h1>Yuk... masukin nama kamu dulu sayanggg 🥳💖</h1>
+    <input type="text" id="nameInput" placeholder="Masukkan nama..." aria-label="Nama" autocomplete="off" />
+    <input type="date" id="birthdateInput" aria-label="Tanggal Lahir" />
     <button id="startButton" aria-label="Mulai permainan">Mulai</button>
   </div>
 
-  <div id="birthdayText" class="animated-text">Happy Birthday Sayanggkuu <span id="userName"></span>! 🎉</div>
+  <div id="birthdayText" class="animated-text">Selamat ulang tahun sayanggkuu <span id="userName"></span>! 🎉🎂</div>
   <div id="balloonContainer"></div>
 
-  <div id="specialMessage" class="animated-text">🎉 Ciee udah 20 tahun aja nihhh... Udah legal dong!!! 🥳</div>
+  <div id="specialMessage" class="animated-text">🎉 Ciee udah 20 tahun aja nihhh... Udah legal dong!!! 🥳💖</div>
 
   <div id="riddle" class="animated-text">
-    <h3>Siapa makhluk hidup terganteng? hehehe...</h3>
-    <input type="text" id="riddleAnswer" placeholder="Jawabanmu..." aria-label="Jawaban teka-teki" />
+    <h3>Siapa orang yang paling ganteng? 🌟</h3>
+    <input type="text" id="riddleAnswer" placeholder="Jawabanmu..." aria-label="Jawaban teka-teki" autocomplete="off" />
     <button id="submitRiddle" aria-label="Kirim jawaban teka-teki">Kirim</button>
     <p id="riddleFeedback"></p>
   </div>
 
   <div id="quiz" class="animated-text">
     <h3 id="quizQuestion"></h3>
-    <input type="text" id="quizAnswer" placeholder="Jawabanmu..." aria-label="Jawaban kuis" />
+    <input type="text" id="quizAnswer" placeholder="Jawabanmu..." aria-label="Jawaban kuis" autocomplete="off" />
     <button id="submitQuiz" aria-label="Kirim jawaban kuis">Kirim Jawaban</button>
     <p id="quizFeedback"></p>
   </div>
 
   <div id="codeLayer" class="animated-text">
-    <h3>Klik gembok untuk mendapatkan kode!</h3>
-    <img id="lockIcon" src="lock_icon.png" alt="Gembok" />
+    <h3>Kode rahasia</h3>
+    <div id="clickPrompt" class="animated-text" tabindex="0" role="button" aria-label="Klik sebanyak 50 kali">Klik cepet ya! Klik di sini sebanyak 50x! 🎉</div>
     <p id="codeFeedback"></p>
-    <input type="text" id="secretCode" placeholder="Masukkan kode rahasia..." aria-label="Kode rahasia" />
+    <input type="text" id="secretCode" placeholder="Masukkan kode rahasia..." aria-label="Kode rahasia" autocomplete="off" />
     <button id="unlockVideo" aria-label="Buka video">Buka Video</button>
   </div>
 
   <div id="videoContainer" class="animated-text">
-    <h3>Video Spesial 🎥</h3>
-    <iframe id="video" width="560" height="315" src="" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div id="video1" class="video active">
+      <h4>Video Ulang Tahun 🎉</h4>
+      <iframe width="560" height="315" src="https://drive.google.com/file/d/14LqWdJQlaPDNR9RIt3wKWfPa4rTMFnLk/preview" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div id="video2" class="video">
+      <h4>Video Kenangan 📸</h4>
+      <iframe width="560" height="315" src="https://drive.google.com/file/d/14QdaX4FoFpvIMY9uK7bRXXWb_cTOGk-v/preview" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div id="video3" class="video">
+      <h4>Video Spesial 🎥</h4>
+      <iframe width="560" height="315" src="https://drive.google.com/file/d/15HCksZZPdvb9QwigE7y-LQoJYpDiJLJV/preview" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <button id="nextButton" aria-label="Lanjut ke video berikutnya">Next</button>
   </div>
+
+  <div id="finalMessage" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+  <audio id="backgroundMusic" src="https://drive.google.com/uc?export=download&id=14SxSzQK0o1huQrAd4-UcWliNtVaRMKfl" loop></audio>
 
   <script>
     const nameInput = document.getElementById("nameInput");
+    const birthdateInput = document.getElementById("birthdateInput");
     const startButton = document.getElementById("startButton");
     const nameInputContainer = document.getElementById("nameInputContainer");
     const birthdayText = document.getElementById("birthdayText");
@@ -206,38 +298,48 @@
     const submitQuiz = document.getElementById("submitQuiz");
     const quizFeedback = document.getElementById("quizFeedback");
 
+    const clickPrompt = document.getElementById("clickPrompt");
+
     const codeLayer = document.getElementById("codeLayer");
-    const lockIcon = document.getElementById("lockIcon");
     const codeFeedback = document.getElementById("codeFeedback");
     const secretCode = document.getElementById("secretCode");
     const unlockVideo = document.getElementById("unlockVideo");
 
     const videoContainer = document.getElementById("videoContainer");
-    const video = document.getElementById("video");
+    const videoElements = document.querySelectorAll('.video');
+    const nextButton = document.getElementById('nextButton');
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    const finalMessage = document.getElementById("finalMessage");
+    let currentVideoIndex = 0;
 
     const quizData = [
-      { question: "Darimana kita ketemu?", answer: ["leomatch", "bot telegram", "bot tele", "telegram"] },
-      { question: "Tanggal berapa kita berpacaran?", answer: ["14", "14 maret"] },
-      { question: "Hal momen apa yang bikin kamu bahagia sama aku?", answer: ["bebas"] }, // Jawaban bebas
-      { question: "Kenapa kamu bisa sayang sama aku?", answer: ["bebas"] }, // Jawaban bebas
-      { question: "Hal apa yang kamu mau sampaikan sama aku?", answer: ["bebas"] } // Jawaban bebas
+      { question: "Apa harapan kamu di ulang tahun kamu tahun ini?", answer: ["bebas"] },
+      { question: "Apa hal yang paling ingin kamu capai dalam waktu dekat?", answer: ["bebas"] },
+      { question: "Apa tujuan hidup terbesar kamu saat ini?", answer: ["bebas"] }
     ];
 
+    let collectedAnswers = []; // Store answers
     let balloonCount = 0;
     const totalBalloons = 20;
-    let lockClickCount = 0; // Counter for lock icon clicks
+    let clicks = 0; // Initialize clicks for the clickPrompt
 
     startButton.onclick = () => {
       const name = nameInput.value.trim();
-      if (name) {
-        userName.textContent = name;
-        nameInputContainer.style.display = "none";
-        birthdayText.style.display = "block";
-        balloonContainer.style.display = "block";
-        spawnBalloon();
-      } else {
+      const birthdate = birthdateInput.value;
+      if (!name) {
         alert("Silakan masukkan nama terlebih dahulu.");
+        return;
       }
+      if (birthdate !== "2005-06-03") {
+        alert("Tanggal lahir harus tanggal 3 Juni 2005!");
+        return;
+      }
+      userName.textContent = name;
+      nameInputContainer.style.display = "none";
+      birthdayText.style.display = "block";
+      balloonContainer.style.display = "flex";
+      backgroundMusic.play(); 
+      spawnBalloon();
     };
 
     function spawnBalloon() {
@@ -256,11 +358,11 @@
         } else {
           balloonContainer.style.display = "none";
           birthdayText.style.display = "none";
-          specialMessage.style.display = "block"; // Show special message after balloons
+          specialMessage.style.display = "block";
           setTimeout(() => {
-            specialMessage.style.display = "none"; // Hide special message after a short delay
-            riddle.style.display = "block"; // Show the riddle
-          }, 5000); // Adjust the delay as needed (5000 ms = 5 seconds)
+            specialMessage.style.display = "none";
+            riddle.style.display = "block";
+          }, 5000);
         }
       };
 
@@ -269,7 +371,7 @@
     }
 
     function animateBalloon(balloon) {
-      let bottom = -100;
+      let bottom = -120;
       const interval = setInterval(() => {
         if (bottom < window.innerHeight) {
           bottom += 2;
@@ -281,7 +383,7 @@
     }
 
     function getRandomColor() {
-      const colors = ["#ff69b4", "#ff1493", "#ff6347", "#ffa500", "#ffcc00", "#00bfff"];
+      const colors = ["#ff69b4", "#ff1493", "#ff85c1", "#ffa6c9", "#f9a1bc", "#d81e5b"];
       return colors[Math.floor(Math.random() * colors.length)];
     }
 
@@ -295,6 +397,9 @@
           riddle.style.display = "none";
           quiz.style.display = "block";
           quizQuestion.textContent = quizData[0].question;
+          quizAnswer.value = "";
+          quizFeedback.textContent = "";
+          currentQuiz = 0;
         }, 1000);
       } else {
         riddleFeedback.style.color = "red";
@@ -304,21 +409,29 @@
 
     let currentQuiz = 0;
     submitQuiz.onclick = () => {
-      const answer = quizAnswer.value.trim().toLowerCase();
+      const answer = quizAnswer.value.trim();
+      collectedAnswers.push({
+        question: quizData[currentQuiz].question,
+        answer: answer
+      });
+
       const validAnswers = quizData[currentQuiz].answer.map(a => a.toLowerCase());
       if (validAnswers.includes(answer) || quizData[currentQuiz].answer.includes("bebas")) {
         currentQuiz++;
         if (currentQuiz < quizData.length) {
           quizAnswer.value = "";
           quizQuestion.textContent = quizData[currentQuiz].question;
+          quizFeedback.textContent = "";
         } else {
           quizFeedback.style.color = "green";
           quizFeedback.textContent = "Semua benar! 🥳";
+          sendAnswersToWhatsApp(); // Send answers to WhatsApp
           setTimeout(() => {
             quiz.style.display = "none";
-            codeLayer.style.display = "block";
-            // Kirim jawaban ke WhatsApp
-            sendToWhatsApp("Semua jawaban benar!");
+            codeLayer.style.display = "block"; // Directly show code layer
+            startClickPrompt(); // Start the click prompt within the code layer
+            codeFeedback.textContent = "";
+            secretCode.value = "";
           }, 1000);
         }
       } else {
@@ -327,29 +440,119 @@
       }
     };
 
-    lockIcon.onclick = () => {
-      lockClickCount++;
-      if (lockClickCount === 3) {
-        codeFeedback.style.color = "green";
-        codeFeedback.textContent = "Kode rahasianya: kamu bocilnya aku ";
+    function sendAnswersToWhatsApp() {
+      const phoneNumber = "6285773615870";
+      let message = "Jawaban Quiz Ulang Tahun:\n\n";
+      
+      collectedAnswers.forEach((item, index) => {
+        message += `${index + 1}. ${item.question}\nJawaban: ${item.answer}\n\n`;
+      });
+      
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    function startClickPrompt() {
+      clicks = 0; // Reset clicks
+      clickPrompt.textContent = `Klik cepet ya! Klik di sini sebanyak ${50 - clicks}x! 🎉`;
+      clickPrompt.onclick = () => {
+        clicks++;
+        if (clicks >= 50) {
+          clickPrompt.textContent = "Kamu sudah klik 50x! 🎉";
+          clickPrompt.onclick = null;
+          codeFeedback.style.color = "green";
+          codeFeedback.textContent = "Kode rahasianya: kamu bocilnya aku ";
+        } else {
+          clickPrompt.textContent = `Klik cepet ya! Klik di sini sebanyak ${50 - clicks}x! 🎉`;
+        }
+      };
+      clickPrompt.style.display = "block"; // Ensure clickPrompt is visible
+    }
+
+    unlockVideo.onclick = () => {
+      const code = secretCode.value.trim().toLowerCase();
+      if (code === "kamu bocilnya aku") {
+        codeLayer.style.display = "none";
+        videoContainer.style.display = "block";
+        backgroundMusic.pause();
+        currentVideoIndex = 0;
+        videoElements.forEach((el, i) => el.classList.toggle('active', i === 0));
+      } else {
+        codeFeedback.style.color = "red";
+        codeFeedback.textContent = "Kode salah, coba lagi ya!";
       }
     };
 
-    unlockVideo.onclick = () => {
-  const code = secretCode.value.trim().toLowerCase();
-  if (code === "kamu bocilnya aku") {
-    codeLayer.style.display = "none";
-    video.src = "https://drive.google.com/file/d/1PsI2bgLxZJtAI4Jy-HAbBFieXzMENcr8/preview"; // Ganti dengan ID kamu
-    videoContainer.style.display = "block";
-  } else {
-    codeFeedback.textContent = "Kode salah, coba lagi ya!";
-  }
-};
+    nextButton.onclick = () => {
+      if (currentVideoIndex < videoElements.length) {
+        let iframe = videoElements[currentVideoIndex].querySelector('iframe');
+        iframe.src = iframe.src; // stop current video by re-assigning its src
+        videoElements[currentVideoIndex].classList.remove('active');
+        currentVideoIndex++;
+        if (currentVideoIndex < videoElements.length) {
+          videoElements[currentVideoIndex].classList.add('active');
+        } else {
+          videoContainer.style.display = "none";
+          showFinalMessage();
+        }
+      }
+    };
 
-    function sendToWhatsApp(message) {
-      const phoneNumber = "628577315870"; // Ganti dengan nomor telepon yang diinginkan
-      const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
+    function showFinalMessage() {
+  // URL alternatif dengan kualitas lebih baik
+  const imgId = '15U-fWwwHaxyZe_VYjRwDLmsdasL4ZpiC';
+  const timestamp = new Date().getTime();
+  
+  // Pilih salah satu format URL berikut:
+  
+  // Format 1 (Direkomendasikan):
+  const imgUrl = `https://lh3.googleusercontent.com/d/${imgId}=s0?${timestamp}`;
+  
+  // Format 2 (Alternatif):
+  // const imgUrl = `https://drive.google.com/thumbnail?id=${imgId}&sz=w2000&${timestamp}`;
+  
+  // Preload gambar untuk kualitas optimal
+  const img = new Image();
+  img.src = imgUrl;
+  img.onload = () => {
+    finalMessage.style.backgroundImage = `url('${imgUrl}')`;
+    finalMessage.classList.add("show");
+    
+    // Optimalisasi rendering
+    finalMessage.style.imageRendering = "crisp-edges";
+    document.body.style.background = "linear-gradient(45deg, #fcefee, #ffd3ea)";
+  };
+
+  setTimeout(() => {
+    finalMessage.classList.remove("show");
+    finalMessage.style.backgroundImage = "";
+    document.body.style.background = "linear-gradient(135deg, #ffeef0 0%, #fff5f8 100%)";
+    resetAll();
+  }, 20000);
+}
+
+    function resetAll() {
+      nameInputContainer.style.display = "flex";
+      birthdayText.style.display = "none";
+      balloonContainer.style.display = "none";
+      specialMessage.style.display = "none";
+      riddle.style.display = "none";
+      quiz.style.display = "none";
+      codeLayer.style.display = "none";
+      videoContainer.style.display = "none";
+      clickPrompt.style.display = "none";
+      currentVideoIndex = 0;
+      balloonCount = 0;
+      clicks = 0; // Reset clicks
+      quizAnswer.value = "";
+      riddleAnswer.value = "";
+      secretCode.value = "";
+      codeFeedback.textContent = "";
+      riddleFeedback.textContent = "";
+      quizFeedback.textContent = "";
+      backgroundMusic.currentTime = 0;
+      backgroundMusic.play();
     }
   </script>
 </body>
